@@ -6,7 +6,7 @@ var urlRoot = "https://api.github.com";
 // NCSU Enterprise endpoint:
 //var urlRoot = "https://api.github.ncsu.edu";
 
-var userId = "yy2111";
+var userId = "djames1-hub";
 var config = {};
 // Retrieve our api token from the environment variables.
 config.token = process.env.GITHUBTOKEN;
@@ -24,8 +24,8 @@ console.log(chalk.green(`Your token is: ${config.token.substring(0,4)}...`));
 if (process.env.NODE_ENV != 'test')
 {
 	(async () => {
-		await listAuthenicatedUserRepos();
-		//await listBranches(userId, "your repo");
+		//await listAuthenicatedUserRepos();
+		//await listBranches(userId, "345Course");
 		//await createRepo(userId,"newrepo");
 		//await createIssue(userId, repo, issue);
 		//await enableWikiSupport(userId,repo);
@@ -94,14 +94,14 @@ function listAuthenicatedUserRepos()
 // 1. Write code for listBranches in a given repo under an owner. See list branches
 async function listBranches(owner,repo)
 {
-	let options = getDefaultOptions(`/`, "GET");
-
+	let options = getDefaultOptions(`/repos/${owner}/${repo}/branches`, "GET");
 	// Send a http request to url and specify a callback that will be called upon its return.
 	return new Promise(function(resolve, reject)
 	{
 		request(options, function (error, response, body) {
 
 			// console.debug( options );
+			console.log(JSON.parse(body));
 			resolve( JSON.parse(body) );
 
 		});
@@ -111,13 +111,15 @@ async function listBranches(owner,repo)
 // 2. Write code to create a new repo
 async function createRepo(owner,repo)
 {
-	let options = getDefaultOptions("/", "POST");
+	let options = getDefaultOptions(`/user/repos/?name=${repo}`, "POST");
 
 	// Send a http request to url and specify a callback that will be called upon its return.
 	return new Promise(function(resolve, reject)
 	{
 		request(options, function (error, response, body) {
 
+			console.log(JSON.parse(body));
+			console.log(response.statusCode);
 			resolve( response.statusCode );
 
 		});
@@ -127,8 +129,8 @@ async function createRepo(owner,repo)
 // 3. Write code for creating an issue for an existing repo.
 async function createIssue(owner,repo, issueName, issueBody)
 {
-	let options = getDefaultOptions("/", "POST");
-
+	let options = getDefaultOptions(`/repos/${owner}/${repo}/issues`, "POST");
+	options.body = JSON.stringify({ title: issueName, body: issueBody });
 	// Send a http request to url and specify a callback that will be called upon its return.
 	return new Promise(function(resolve, reject)
 	{
