@@ -160,7 +160,7 @@ async function createIssue(owner,repo, issueName, issueBody)
 // 4. Write code for editing a repo to enable wiki support.
 async function enableWikiSupport(owner,repo)
 {
-	let options = getDefaultOptions(`/user/repos/${repo}`, "PATCH");
+	let options = getDefaultOptions(`/repos/${owner}/${repo}`, "PATCH");
 	options.body = JSON.stringify({ has_wiki: true });
 
 	// Send a http request to url and specify a callback that will be called upon its return.

@@ -4,6 +4,7 @@ var assert = chai.assert,
 
 process.env.NODE_ENV = 'test'
 const github = require('../index');
+const newRepo = 'HW3-345';
 
 // Turn off logging
 console.log = function(){};
@@ -28,7 +29,7 @@ describe("GitHub EndPoint Tests", function() {
     it("createRepo successfully creates repo", async function() {
         
       let user  = await github.getUser();
-      let status = await github.createRepo(user, "test-HW4-345");
+      let status = await github.createRepo(user, newRepo);
       expect(status).to.equal(201);
 
     });
@@ -37,7 +38,7 @@ describe("GitHub EndPoint Tests", function() {
     it("createIssue successfully creates issue", async function() {
       
       let user  = await github.getUser();
-      let status = await github.createIssue(user, "test-HW4-345", "issue name", "issue body");
+      let status = await github.createIssue(user, newRepo, "issue name", "issue body");
       expect(status).to.equal(201);
 
     });
@@ -45,7 +46,7 @@ describe("GitHub EndPoint Tests", function() {
     it("enableWikiSupport successfully enables wiki support", async function() {
       
       let user  = await github.getUser();
-      let response = await github.enableWikiSupport(user, "test-HW4-345");
+      let response = await github.enableWikiSupport(user, newRepo);
 
       expect(response).to.have.property('has_wiki');
       expect(response.has_wiki).to.equal(true);
