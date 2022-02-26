@@ -28,7 +28,7 @@ if (process.env.NODE_ENV != 'test')
 		//await listBranches(userId, "345Course");
 		//await createRepo(userId,"newrepo");
 		//await createIssue(userId, repo, issue);
-		//await enableWikiSupport(userId,repo);
+		await enableWikiSupport(userId, "345Course");
 
 	})()
 }
@@ -100,9 +100,22 @@ async function listBranches(owner,repo)
 	{
 		request(options, function (error, response, body) {
 
-			// console.debug( options );
-			console.log(JSON.parse(body));
-			resolve( JSON.parse(body) );
+			if( error )
+			{
+				console.log( chalk.red( error ));
+				reject(error);
+				return; // Terminate execution.
+			}
+
+			var obj = JSON.parse(body);
+			for( var i = 0; i < obj.length; i++ )
+			{
+				var name = obj[i].name;
+				console.log( name );
+			}
+
+			// Return object for people calling our method.
+			resolve( obj );
 
 		});
 	});
@@ -111,7 +124,9 @@ async function listBranches(owner,repo)
 // 2. Write code to create a new repo
 async function createRepo(owner,repo)
 {
-	let options = getDefaultOptions(`/user/repos/?name=${repo}`, "POST");
+	let options = getDefaultOptions(`/user/repos`, "POST");
+
+	options.body = JSON.stringify({ name: repo, description: "Github repo from api v3"});
 
 	// Send a http request to url and specify a callback that will be called upon its return.
 	return new Promise(function(resolve, reject)
@@ -145,13 +160,15 @@ async function createIssue(owner,repo, issueName, issueBody)
 // 4. Write code for editing a repo to enable wiki support.
 async function enableWikiSupport(owner,repo)
 {
-	let options = getDefaultOptions("/", "PATCH");
+	let options = getDefaultOptions(`/user/repos/${repo}`, "PATCH");
+	options.body = JSON.stringify({ has_wiki: true });
 
 	// Send a http request to url and specify a callback that will be called upon its return.
 	return new Promise(function(resolve, reject)
 	{
 		request(options, function (error, response, body) {
-
+			console.log(response.statusCode);
+			console.log(JSON.parse(body));
 			resolve( JSON.parse(body) );
 		});
 	});	
