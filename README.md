@@ -6,4 +6,4 @@
         - completed code for create an issue for a specific repo
         - completed code for enabling wiki support for a repo
 - Screencast which is added to github through browser because file size limit
-    - Can be found in video folder
+    - Can be found in videos folder
